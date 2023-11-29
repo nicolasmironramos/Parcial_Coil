@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Estudio estadístico de los Accidentes de Bicicletas en Madrid en 2023</title>
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+</head>
+<body>
+    <py-config>
+        packages = ["pandas", "matplotlib"]
+        plugins = [
+            "https://pyscript.net/latest/plugins/python/py_tutor.py"
+        ]
+    </py-config>
+    <script type="py">
+        import pandas as pd
+        import numpy as np
+        import matplotlib.pyplot as plt
+
+        # Load data from a CSV file
+        csv_file_path = '/workspaces/Parcial_Coil/AccidentesBicicletas_2023.csv'
+        df_accidentes = pd.read_csv(csv_file_path)
+        df_accidentes.head(10)
+
+        df_accidentes.isna().sum()
+
+        df_accidentes["estado_meteorológico"] = df_accidentes["estado_meteorológico"].fillna(value="Se desconoce")
+        conteo_edomet = df_accidentes["estado_meteorológico"].value_counts()
+        print(conteo_edomet)
+
+        conteo_edomet.plot(kind="pie")
+        plt.xlabel("Estado Meteorológico")
+        plt.ylabel("Frecuencia")
+        plt.title("Estado meteorológico cuando ocurre accidente")
+
+        df_accidentes["tipo_accidente"] = df_accidentes["tipo_accidente"].fillna(value="NULL")
+        conteo_edomet2 = df_accidentes["tipo_accidente"].value_counts()
+        print(conteo_edomet2)
+
+        conteo_edomet2.plot(kind="line")
+        plt.xlabel("Accidente")
+        plt.ylabel("Frecuencia")
+        plt.title("Tipo de accidente")
+
+        df_accidentes["tipo_vehiculo"] = df_accidentes["tipo_vehiculo"].fillna(value="NULL")
+        conteo_edomet3 = df_accidentes["tipo_vehiculo"].value_counts()
+        print(conteo_edomet3)
+
+        conteo_edomet3.plot(kind="barh")
+        plt.xlabel("Frecuencia")
+        plt.ylabel("Vehículo")
+        plt.title("Tipo de Vehículo")
+
+        df_accidentes["tipo_persona"] = df_accidentes["tipo_persona"].fillna(value="NULL")
+        conteo_edomet4 = df_accidentes["tipo_persona"].value_counts()
+        print(conteo_edomet4)
+
+        conteo_edomet4.plot(kind="scatter", x="tipo_persona", y="edad")
+        plt.xlabel("Persona")
+        plt.ylabel("Edad")
+        plt.title("Relación entre tipo de persona y edad")
+
+        df_accidentes["sexo"] = df_accidentes["sexo"].fillna(value="NULL")
+        conteo_edomet5 = df_accidentes["sexo"].value_counts()
+        print(conteo_edomet5)
+
+        conteo_edomet5.plot(kind="box")
+        plt.xlabel("Sexo")
+        plt.ylabel("Frecuencia")
+        plt.title("Sexo de accidentado")
+
+        df_accidentes["lesividad"] = df_accidentes["lesividad"].fillna(value="NULL")
+        conteo_edomet6 = df_accidentes["lesividad"].value_counts()
+        print(conteo_edomet6)
+
+        conteo_edomet6.plot(kind="area")
+        plt.xlabel("Lesión")
+        plt.ylabel("Frecuencia")
+        plt.title("Lesividad de accidente")
+
+        df_accidentes["distrito"] = df_accidentes["distrito"].fillna(value="NULL")
+        conteo_edomet7 = df_accidentes["distrito"].value_counts()
+        print(conteo_edomet7)
+
+        conteo_edomet7.plot(kind="bar")
+        plt.xlabel("Distrito")
+        plt.ylabel("Frecuencia")
+        plt.title("Distrito donde ocurrió el accidente")
+
+        conteo_distrito = df_accidentes["distrito"].value_counts()
+        distrito_mas_accidentes = conteo_distrito.idxmax()
+        print("El distrito donde ocurrieron más accidentes es:", distrito_mas_accidentes)
+
+        correlation_matrix = df_accidentes.corr(numeric_only=True)
+        correlation_matrix
+
+        df_accidentes['numero'] = pd.to_numeric(df_accidentes['numero'], errors='coerce')
+        grupo_vehiculo = df_accidentes.groupby('tipo_vehiculo')['numero'].mean()
+        grupo_vehiculo  
+
+        grupo_accidente_lesividad = df_accidentes.groupby('tipo_accidente')['lesividad'].value_counts()
+        print(grupo_accidente_lesividad)
+
+        grupo_distrito_meteorologia = df_accidentes.groupby('distrito')['estado_meteorológico'].value_counts()
+        print(grupo_distrito_meteorologia)
+
+        grupo_persona_sexo = df_accidentes.groupby('tipo_persona')['sexo'].value_counts()
+        print(grupo_persona_sexo)
+    </script>
+</body>
+</html>
